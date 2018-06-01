@@ -5,14 +5,15 @@
   "main": "poll.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lambda-dev": "netlify-lambda serve ./functions",
-    "lambda-build": "netlify-lambda build ./functions",
+    "lambda-dev": "AWS_LAMBDA_JS_RUNTIME=nodejs8.10 netlify-lambda serve ./functions -c ./webpack.config.js",
+    "lambda-build": "AWS_LAMBDA_JS_RUNTIME=nodejs8.10 netlify-lambda build ./functions -c ./webpack.config.js",
     "build": "npm run lambda-build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-fetch": "^2.1.2"
+    "node-fetch": "^2.1.2",
+    "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {
     "netlify-lambda": "^0.4.0"
