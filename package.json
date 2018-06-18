@@ -12,7 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^2.4.1",
     "node-fetch": "^2.1.2",
+    "tinydb": "^0.1.0",
     "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {

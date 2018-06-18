@@ -2,11 +2,13 @@ const options = require('./options');
 
 const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const dayNamesShort = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const slackDayIcons = [':one:', ':two:', ':three:', ':four:', ':five:', ':six:', ':seven:'];
 
 const slackIcons = {
     "clear sky": ":sunny:",
     "scattered clouds": ":sun_behind_cloud:",
     "broken clouds": ":cloud:",
+    "overcast clouds": ":cloud:",
     "light rain": ":rain_cloud:",
 };
 
@@ -23,6 +25,7 @@ const slackIcons = {
 // 	"10n": 🌧, // light rain
 // };
 
+// TODO: this needs testing
 const findClosestTimeData = (time, breakdown) => {
     debugger;
     if (breakdown[time]) {
@@ -48,12 +51,17 @@ const findClosestTimeData = (time, breakdown) => {
     return bestMatch;
 }
 
-module.exports = function formatPollOptions(weatherData) {
-    return Object.keys(weatherData).reduce((prev, date) => {
+module.exports = function formatPollOptions(weatherData) {    
+    return Object.keys(weatherData).map(date => {
+        // TODO: this should probably be in pollOptionsFetcher::processWeatherData
+        // and this should be a simple utility
         const { commonWeather } = weatherData[date];
         const { temp } = findClosestTimeData(options.time, weatherData[date].breakdown);
-        const dayName = dayNamesShort[(new Date(date)).getDay()];
+        const dayIndex = (new Date(date)).getDay() - 1;
+        const slackIcon = slackDayIcons[dayIndex]; // TODO: don't like this being here really
+        const dayName = dayNamesShort[dayIndex];
 
-        return prev + `"${dayName} ${Math.round(temp)}˚C ${slackIcons[commonWeather]}" `;
-    }, '');
+        console.log("Common weather", date, commonWeather);
+        return `${slackIcon} ${dayName} ${date} ${Math.round(temp)}˚C ${slackIcons[commonWeather]}`;
+    });
 }

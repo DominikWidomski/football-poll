@@ -16,11 +16,11 @@
 const fetch = require('node-fetch');
 // const { fetch } = require('whatwg-fetch');
 
-const apiKey = "8eaab28b8e0df31330696c45d587517e";
+const apiKey = "8eaab28b8e0df31330696c45d587517e"; // FIXME put in process ENV
 
 // Had to make it const to not move it because then `const fetch` above isn't hoisted either
-const getData = async () => {
-    console.log("FETCH IS:", fetch, typeof fetch);
+const getData = async () => { // TODO: extract into a separate file
+    // console.log("FETCH IS:", fetch, typeof fetch);
     let output;
 
     await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=London,uk&mode=json&appid=${apiKey}`, {
@@ -33,7 +33,7 @@ const getData = async () => {
     return output;
 }
 
-const kelvinToCelcius = (kelvinTemp) => {
+const kelvinToCelcius = (kelvinTemp) => { // TODO: move into utils
     return kelvinTemp - 273.15;
 }
 
