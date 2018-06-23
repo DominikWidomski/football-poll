@@ -9,6 +9,7 @@ const slackIcons = {
     "scattered clouds": ":sun_behind_cloud:",
     "broken clouds": ":cloud:",
     "overcast clouds": ":cloud:",
+    "few clours": ":cloud:",
     "light rain": ":rain_cloud:",
 };
 
@@ -62,6 +63,6 @@ module.exports = function formatPollOptions(weatherData) {
         const dayName = dayNamesShort[dayIndex];
 
         console.log("Common weather", date, commonWeather);
-        return `${slackIcon} ${dayName} ${date} ${Math.round(temp)}˚C ${slackIcons[commonWeather]}`;
+        return `${slackIcon} ${dayName} ${date} ${Math.round(temp)}˚C ${slackIcons[commonWeather]} (${commonWeather})`;
     });
 }

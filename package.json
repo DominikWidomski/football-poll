@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "btoa": "^1.2.1",
     "chalk": "^2.4.1",
     "node-fetch": "^2.1.2",
     "tinydb": "^0.1.0",

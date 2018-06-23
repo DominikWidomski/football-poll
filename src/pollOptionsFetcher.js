@@ -23,7 +23,8 @@ const getData = async () => { // TODO: extract into a separate file
     // console.log("FETCH IS:", fetch, typeof fetch);
     let output;
 
-    await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=London,uk&mode=json&appid=${apiKey}`, {
+    // TODO: don't need `output` I think 
+    await fetch(`http://api.openweathermap.org/data/2.5/forecast?lat=51.4613&lon=0.1156&mode=json&appid=${apiKey}`, {
         method: "GET"
     })
         .then(response => response.json())
@@ -37,12 +38,22 @@ const kelvinToCelcius = (kelvinTemp) => { // TODO: move into utils
     return kelvinTemp - 273.15;
 }
 
+const isWeekday = (date) => {
+    const day = (new Date(date)).getDay();
+
+    return day < 6 && day > 0;
+}
+
 const processWeatherData = list => {
     const data = {};
 
     list.forEach(item => {
         const { dt, dt_txt, main, weather } = item;
         const [date, time] = dt_txt.split(' ');
+
+        if (!isWeekday(date)) {
+            return;
+        }
 
         if (!data[date]) {
             data[date] = {
