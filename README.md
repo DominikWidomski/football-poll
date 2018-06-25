@@ -42,6 +42,14 @@ Might then need to update the URL in slack's config.
   - "lambda-dev": "AWS_LAMBDA_JS_RUNTIME=nodejs8.10 netlify-lambda serve ./functions -c ./webpack.config.js",
 - I think as far as netlify setup I just had to specify the build command and that was it
 - Netlify has a free tier so you can try and setup today
+- Handling errors:
+  - at some point when deploying to production I didn't realise what I was doing wrong:
+    - no errors in browser
+    - no erros in postman
+    - no errors in netlify logs
+  - I realised I can't just throw errors, I need to call `callback` with them!
+  - at which point logs started comming in correctly! (WAS IT?!)
+  - This was a bit confusing at first because it was not explained and I only kind of realised this because I knew a bit about AWS Lambda
 
 ### FURTHER WORK:
 
