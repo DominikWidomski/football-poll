@@ -2,7 +2,6 @@
 // https://medium.com/slack-developer-blog/out-and-back-again-6b2f3c84f484
 
 const TinyDB = require('tinydb');
-const DB = new TinyDB('./local.db'); // pass that from lambda context or something
 const hash = require('../src/utils/hash');
 
 const clientFeatureWarning = "(upgrade your Slack client for better UX)";
@@ -34,28 +33,45 @@ const { URLSearchParams } = require('url');
 const constructPoll = require('../src/constructPoll');
 
 exports.handler = async function handler(event, context, callback) {
-    try {
-        await dbReady(DB);
-    } catch (e) {
-        console.error("DB SETUP ERROR", e);
-    }
-    
-    DB.setInfo('title', 'Test DB', function (err, key, value) {
-        if (err) {
-            console.log("DB ERROR:", err);
-            return;
-        }
-
-        console.log("DB:", `${key}: ${value}`);
-    });
+    console.log(">>> Inside Lambda");
 
     const query = new URLSearchParams(event.body);
 
     console.log(query);
 
+    // TODO: AUTHENTICATE FIRST!
     if (query.get('token') !== AUTH_TOKEN) {
         callback(new Error('Unauthorized'));
+
         return;
+    }
+    
+    let DB;
+    try {
+        console.log('trying for DB');
+        DB = new TinyDB('./local.db'); // pass that from lambda context or something
+        await dbReady(DB);
+        console.log('GOT THE DB');
+    } catch (e) {
+        console.log("DB SETUP ERROR", e);
+        callback(new Error("DB SETUP ERROR", e));
+    }
+    
+    try {
+        await new Promise((resolve, reject) => {
+            DB.setInfo('title', 'Test DB', function (err, key, value) {
+                if (err) {
+                    console.log("DB ERROR:", err);
+                    reject(err);
+                }
+                
+                console.log("DB:", `${key}: ${value}`);
+                resolve();
+            });
+        });
+    } catch (error) {
+        console.log("DB setInfo error", error);
+        callback(new Error("DB setInfo error", error));
     }
 
     // TODO: Proper parameter parsing

@@ -13,7 +13,7 @@
 // output:
 // 	<message> <options>
 
-const fetch = require('node-fetch');
+const fetch = require('node-fetch').default;
 // const { fetch } = require('whatwg-fetch');
 
 const apiKey = "8eaab28b8e0df31330696c45d587517e"; // FIXME put in process ENV
@@ -23,6 +23,8 @@ const getData = async () => { // TODO: extract into a separate file
     // console.log("FETCH IS:", fetch, typeof fetch);
     let output;
 
+    console.log("fetch is", typeof fetch);
+    
     // TODO: don't need `output` I think 
     await fetch(`http://api.openweathermap.org/data/2.5/forecast?lat=51.4613&lon=0.1156&mode=json&appid=${apiKey}`, {
         method: "GET"

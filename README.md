@@ -21,6 +21,12 @@ Might then need to update the URL in slack's config.
 
 ---
 
+## Problems:
+- Build:
+  - I either excludeExternals and it builds, or fetch is still not available becuase of BS inside of `iconv-loader`
+- Database:
+  - in production, will I have to plug into firebase or something?!
+
 ### Show'n'Tell Notes:
 
 - "This is not a workshop or a tutorial as such, more a bit of a demo of a little side hack-day type project"

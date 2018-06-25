@@ -3,8 +3,8 @@ exports.handler = function(event, context, callback) {
 
     console.log("GONNA DO SOME COOL SHIT");
 
-    console.log("ERROR!");
-    callback(new Error("FUCK IS BROKE!"));
+    // console.log("ERROR!");
+    // callback(new Error("FUCK IS BROKE!"));
     
     callback(null, {
         statusCode: 200,
