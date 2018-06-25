@@ -2,6 +2,7 @@
   "name": "slack_football_poll",
   "version": "1.0.0",
   "description": "",
+  "repository": "https://github.com/DominikWidomski/football-poll",
   "main": "poll.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
