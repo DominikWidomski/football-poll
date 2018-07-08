@@ -33,7 +33,7 @@ const { URLSearchParams } = require('url');
 const constructPoll = require('../src/constructPoll');
 
 exports.handler = async function handler(event, context, callback) {
-    console.log(">>> Inside Lambda", process.NODE_ENV, process.env.NODE_ENV);
+    console.log(">>> Inside Lambda", `[NODE_ENV: ${process.env.NODE_ENV}]`);
 
     const query = new URLSearchParams(event.body);
 
