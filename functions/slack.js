@@ -33,7 +33,7 @@ const { URLSearchParams } = require('url');
 const constructPoll = require('../src/constructPoll');
 
 exports.handler = async function handler(event, context, callback) {
-    console.log(">>> Inside Lambda");
+    console.log(">>> Inside Lambda", process.NODE_ENV, process.env.NODE_ENV);
 
     const query = new URLSearchParams(event.body);
 
@@ -164,7 +164,7 @@ exports.handler = async function handler(event, context, callback) {
         ]
     };
 
-    //*
+    /*
     DB.appendItem({
         id,
         timestamp: messageTimestamp,
