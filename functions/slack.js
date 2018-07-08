@@ -1,7 +1,7 @@
 // this is kind useful maybe...
 // https://medium.com/slack-developer-blog/out-and-back-again-6b2f3c84f484
 
-const TinyDB = require('tinydb');
+// const TinyDB = require('tinydb');
 const hash = require('../src/utils/hash');
 
 const clientFeatureWarning = "(upgrade your Slack client for better UX)";
@@ -42,10 +42,11 @@ exports.handler = async function handler(event, context, callback) {
     // TODO: AUTHENTICATE FIRST!
     if (query.get('token') !== AUTH_TOKEN) {
         callback(new Error('Unauthorized'));
-
+        
         return;
     }
     
+    /*
     let DB;
     try {
         console.log('trying for DB');
@@ -73,6 +74,7 @@ exports.handler = async function handler(event, context, callback) {
         console.log("DB setInfo error", error);
         callback(new Error("DB setInfo error", error));
     }
+    //*/
 
     // TODO: Proper parameter parsing
     const message = query
@@ -162,6 +164,7 @@ exports.handler = async function handler(event, context, callback) {
         ]
     };
 
+    /*
     DB.appendItem({
         id,
         timestamp: messageTimestamp,
@@ -170,6 +173,7 @@ exports.handler = async function handler(event, context, callback) {
         teamId: query.get('team_id'),
         slackMessage,
     });
+    //*/
     
     callback(null, {
         statusCode: 200,
