@@ -1,7 +1,7 @@
 // this is kind useful maybe...
 // https://medium.com/slack-developer-blog/out-and-back-again-6b2f3c84f484
 
-// const TinyDB = require('tinydb');
+const TinyDB = require('tinydb');
 const hash = require('../src/utils/hash');
 
 const clientFeatureWarning = "(upgrade your Slack client for better UX)";
@@ -46,7 +46,7 @@ exports.handler = async function handler(event, context, callback) {
         return;
     }
     
-    /*
+    //*
     let DB;
     try {
         console.log('trying for DB');
@@ -164,7 +164,7 @@ exports.handler = async function handler(event, context, callback) {
         ]
     };
 
-    /*
+    //*
     DB.appendItem({
         id,
         timestamp: messageTimestamp,
