@@ -3,7 +3,7 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     target: 'node',
-    externals: [nodeExternals()],
+    // externals: [nodeExternals()],
     
     // plugins: [
         // new webpack.IgnorePlugin(/\/iconv-loader$/)
