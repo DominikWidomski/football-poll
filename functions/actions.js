@@ -3,8 +3,9 @@ const AUTH_TOKEN = "WPxNoxrvZYvE5T0B8xSFApNR"; // FIXME put in process ENV
 const chalk = require('chalk');
 const TinyDB = require('tinydb');
 const DB = new TinyDB('./local.db'); // pass that from lambda context or something
+const { getDB } = require("./utils/DB");
 
-const dbReady = async (DB) => new Promise(resolve => DB.onReady = resolve);
+// const dbReady = async (DB) => new Promise(resolve => DB.onReady = resolve);
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
@@ -46,10 +47,17 @@ const actionHandlers = {
 // https://www.netlify.com/docs/netlify-toml-reference/ Context for setting up and passing DB???
 // https://www.netlify.com/docs/continuous-deployment/
 exports.handler = async function handler(event, context, callback) {
+    // RETRIEVING DB
+    // try {
+    //     await dbReady(DB);
+    // } catch (e) {
+    //     console.error("DB SETUP ERROR", e);
+    // }
+    let DB;
     try {
-        await dbReady(DB);
+        DB = await getDB('./local.db')
     } catch (e) {
-        console.error("DB SETUP ERROR", e);
+        callback(e);
     }
     
     const body = new URLSearchParams(event.body);
@@ -64,30 +72,47 @@ exports.handler = async function handler(event, context, callback) {
     }
 
     // console.log("MESSAGE TS:", payload.message_ts.split('.')[0], "??? 1529653179");
-    console.log('ID', payload.actions[0].value.split('@')[0]);
-    const savedMessage = await new Promise((resolve, reject) => {
-        DB.find({
-            id: payload.actions[0].value.split('@')[0],
-            // timestamp: payload.message_ts.split('.')[0],
-            slackChannelId: payload.channel.id
-        }, (error, data) => {
-            if (error) {
-                console.error('DB COUND NOT RETRIEVE MESSAGE', error);
-                reject(error);
-            }
+    const payloadId = payload.actions[0].value.split('@')[0];
+    console.log('ID', payloadId);
 
-            if (data.length !== 1) {
-                reject(new Error("UNEXPECTED NUMBER OF RECORDS FOUND: " + data.length));
-            }
+    const query = {
+        id: payloadId,
+        // timestamp: payload.message_ts.split('.')[0],
+        slackChannelId: payload.channel.id
+    };
+
+    const savedMessageRecord = await new Promise(async (resolve, reject) => {
+        // RETRIEVING FROM DB
+        // DB.find({
+        //     id: payloadId,
+        //     // timestamp: payload.message_ts.split('.')[0],
+        //     slackChannelId: payload.channel.id
+        // }, (error, data) => {
+        //     if (error) {
+        //         console.error('DB COUND NOT RETRIEVE MESSAGE', error);
+        //         reject(error);
+        //     }
+
+        //     if (data.length !== 1) {
+        //         reject(new Error("UNEXPECTED NUMBER OF RECORDS FOUND: " + data.length));
+        //     }
             
-            resolve(data[0]);
-        });
+        //     resolve(data[0]);
+        // });
+
+        try {
+            const res = await DB.find(query);
+            resolve(res);
+        } catch (e) {
+            callback(new Error("Error retrieving record", e));
+        }
     });
 
-    console.log("SAVED MESSAGE", savedMessage);
+    const savedMessageData = savedMessageRecord.data;
+    
+    console.log("SAVED MESSAGE DATA", savedMessageData);
 
     let responseMessage = '';
-    const id = payload.actions[0].value.split('@')[0];
 
     if (payload.type === "interactive_message") {
         const { actions, team, user } = payload;
@@ -102,14 +127,14 @@ exports.handler = async function handler(event, context, callback) {
                 }, team, user);
 
                 // Lazy populated players storage, could be eagerly created when message is saved in DB
-                savedMessage.players = savedMessage.players || {};
-                savedMessage.players[actionValue] = savedMessage.players[actionValue] || [];
+                savedMessageData.players = savedMessageData.players || {};
+                savedMessageData.players[actionValue] = savedMessageData.players[actionValue] || [];
                 
-                if (!savedMessage.players[actionValue].includes(user.name)) {
-                    savedMessage.players[actionValue].push(user.name);
+                if (!savedMessageData.players[actionValue].includes(user.name)) {
+                    savedMessageData.players[actionValue].push(user.name);
                 } else {
-                    const index = savedMessage.players[actionValue].indexOf(user.name);
-                    savedMessage.players[actionValue].splice(index, 1);
+                    const index = savedMessageData.players[actionValue].indexOf(user.name);
+                    savedMessageData.players[actionValue].splice(index, 1);
                 }
                 
                 // const updatedAction = savedMessage.slackMessage.attachments[2].actions.find(({value}) => value === action.value);
@@ -121,21 +146,25 @@ exports.handler = async function handler(event, context, callback) {
     }
     
     // Update slack message
-    const { fields } = savedMessage.slackMessage.attachments[1];
-    savedMessage.slackMessage.attachments[1].fields = fields.map(field => {
+    const { fields } = savedMessageData.slackMessage.attachments[1];
+    savedMessageData.slackMessage.attachments[1].fields = fields.map(field => {
         const day = field.title.split(' ')[0]; // Icon, e.g.: ":one:"
 
         return {
             ...field,
-            value: `players: ${(savedMessage.players[day] || []).join(' ')}`
+            value: `players: ${(savedMessageData.players[day] || []).join(' ')}`
         };
     });
 
+    // INSERTING to / UPDATING DB
     // TODO: This is bullshit TinyDB is not finished
-    const DB_RECORD = DB._data.data.find(record => record.id === id);
-    const DB_RECORD_INDEX = DB._data.data.indexOf(DB_RECORD);
-    DB._data.data[DB_RECORD_INDEX] = savedMessage;
-    DB._save();
+    // const DB_RECORD = DB._data.data.find(record => record.id === id);
+    // const DB_RECORD_INDEX = DB._data.data.indexOf(DB_RECORD);
+    // DB._data.data[DB_RECORD_INDEX] = savedMessage;
+    // DB._save();
+
+    savedMessageData.update(savedMessageData);
+    
     // DB.insertItem(savedMessage, savedMessage._id, (error, content) => {
     //     if (error) {
     //         console.error("Error inserting data");
@@ -153,7 +182,7 @@ exports.handler = async function handler(event, context, callback) {
         // body: JSON.stringify({
         //     "response_type": "ephemeral", // FIXME: Expecting a message only to the user but is replacing the original message...
         //     "text": '',
-        body: JSON.stringify(savedMessage.slackMessage)
+        body: JSON.stringify(savedMessageData.slackMessage)
         // })
         // body: ''
     });

@@ -15,10 +15,11 @@
   "dependencies": {
     "btoa": "^1.2.1",
     "chalk": "^2.4.1",
+    "firebase": "^5.3.1",
+    "firebase-admin": "^5.13.0",
     "netlify-lambda": "^0.4.0",
     "node-fetch": "^2.1.2",
     "tinydb": "^0.1.0",
     "webpack-node-externals": "^1.7.2"
-  },
-  "devDependencies": {}
+  }
 }

@@ -1,8 +1,9 @@
 // this is kind useful maybe...
 // https://medium.com/slack-developer-blog/out-and-back-again-6b2f3c84f484
 
-const TinyDB = require('tinydb');
+// const TinyDB = require('tinydb');
 const hash = require('../src/utils/hash');
+const { getDB } = require('./utils/DB');
 
 const clientFeatureWarning = "(upgrade your Slack client for better UX)";
 
@@ -13,9 +14,6 @@ process.on('unhandledRejection', error => {
 });
 
 const AUTH_TOKEN = "WPxNoxrvZYvE5T0B8xSFApNR"; // FIXME put in process ENV
-
-// TODO: move to utils
-const dbReady = async (DB) => new Promise(resolve => DB.onReady = resolve);
 
 // Incoming?
 // token = Xue78utBH7gkrxbNUUswfHnM
@@ -46,7 +44,15 @@ exports.handler = async function handler(event, context, callback) {
         return;
     }
     
-    //*
+    let DB;
+    try {
+        DB = await getDB('./local.db');
+        console.log("GOT THE DATABASE"); // DEBUG
+    } catch (e) {
+        console.log("SOME ERROR?!"); // DEBUG
+        callback(e);
+    }
+    /* RETRIEVING DB
     let DB;
     try {
         console.log('trying for DB');
@@ -164,7 +170,7 @@ exports.handler = async function handler(event, context, callback) {
         ]
     };
 
-    /*
+    /* INSERTING TO DB
     DB.appendItem({
         id,
         timestamp: messageTimestamp,
@@ -174,6 +180,15 @@ exports.handler = async function handler(event, context, callback) {
         slackMessage,
     });
     //*/
+    // FIXME: UGH! adapter.setup should return instance of abstracted DBInterface
+    DB.insert({
+        id,
+        timestamp: messageTimestamp,
+        query: query.toString(),
+        slackChannelId: query.get('channel_id'),
+        teamId: query.get('team_id'),
+        slackMessage,
+    });
     
     callback(null, {
         statusCode: 200,

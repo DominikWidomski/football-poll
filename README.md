@@ -16,18 +16,28 @@ _May be slightly outdated as it's now an app_
 
 ## Build and deploy
 
-This app's functions are hosted with Netlify. All it takes to deploy is to push to `master` branch.
+This app's functions are hosted with Netlify. All it takes to deploy is to push to `master` branch. (technically any? branch gets deployed with branch deploys)
 Might then need to update the URL in slack's config.
 
 ---
 
 ## Problems:
 - Build:
-  - I either excludeExternals and it builds, or fetch is still not available becuase of BS inside of `iconv-loader`
+  - [x] I either excludeExternals and it builds, or fetch is still not available becuase of BS inside of `iconv-loader`
+- Environment:
+  - [ ] Would like to setup NODE_ENV correctly or maybe have some additional variable to specify not production branch or dev or whatever, `local` vs `hosted`
+    - `master` can have proper production config
+    - any other branches should be `development` but also `hosted`
+    - locally, `development` and `local`
 - Database:
-  - in production, will I have to plug into firebase or something?!
+  - [ ] In production, will I have to plug into firebase or something?!
+  - [ ] Probably would be better to just build with firebase, TinyDB is not even done, there are some other alternatives tho, but could add those later for convenicence.
+  - [ ] Seems like the production thing is stuck, times out, not sure why exactly, if it's the DB thing is wrong but then the funciton remains stuck? or it's just an issue with how it was developed and was setup with the DB, so once I have removed the dependancy on tinyDB and switched to Firebase I will work as expected.
 
 ### Show'n'Tell Notes:
+
+General objective:
+- How can I present this project, kind of show any value from it, the tech stack, show a bit of excitement, the possibilities, what it was suppose to be and where it's currently, how on track it is, show it in a positive light. Kinda like to a client especially if the project isn't going swimmingly.
 
 - "This is not a workshop or a tutorial as such, more a bit of a demo of a little side hack-day type project"
 	- It's work in progress and I'd love to see more people sharing their work in progress projects in sho'n'tells
@@ -72,6 +82,7 @@ Might then need to update the URL in slack's config.
     - I found Netlify didn't instantly pick up the other branch as I pushed it to GitHub, give it some time
 	- Netlify has "split testing" with branch deploys, worth exploring
 - You like Jake Archibald, recent tweet: https://twitter.com/jaffathecake/status/1008705035532947461
+- Add Flow
 
 ### Issues:
 
@@ -81,3 +92,7 @@ Might then need to update the URL in slack's config.
   - Otherwise I might be doing something wrong, maybe async problems, and would be good to simplify the case to debug.
 - So, I did Slack message updating with slack by responding with an updated message.
   - So this is one way of doing it. And I'm not sure if it would be easy enough to translate this to using the Slack web API. What would be the need to do that, is something not possible with the current approach?
+
+### Notes:
+
+- Could format things differently, can we have a table? To show who's in and who's not in on what days easier (showing overlap and delta between days).

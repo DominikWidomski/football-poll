@@ -13,7 +13,7 @@ module.exports = {
         })
         // new webpack.IgnorePlugin(/\/iconv-loader$/)
         // new webpack.IgnorePlugin(/\/encoding$/)
-    ]
+    ],
 
     // node_modules: "<cwd>/node_modules"
 };
