@@ -3,7 +3,7 @@
 
 // const TinyDB = require('tinydb');
 const hash = require('../src/utils/hash');
-const { getDB } = require('./utils/DB');
+// const { getDB } = require('./utils/DB');
 
 const clientFeatureWarning = "(upgrade your Slack client for better UX)";
 
@@ -44,14 +44,14 @@ exports.handler = async function handler(event, context, callback) {
         return;
     }
     
-    let DB;
-    try {
-        DB = await getDB('./local.db');
-        console.log("GOT THE DATABASE"); // DEBUG
-    } catch (e) {
-        console.log("SOME ERROR?!"); // DEBUG
-        callback(e);
-    }
+    // let DB;
+    // try {
+    //     DB = await getDB('./local.db');
+    //     console.log("GOT THE DATABASE"); // DEBUG
+    // } catch (e) {
+    //     console.log("SOME ERROR?!"); // DEBUG
+    //     callback(e);
+    // }
     /* RETRIEVING DB
     let DB;
     try {
@@ -181,14 +181,14 @@ exports.handler = async function handler(event, context, callback) {
     });
     //*/
     // FIXME: UGH! adapter.setup should return instance of abstracted DBInterface
-    DB.insert({
-        id,
-        timestamp: messageTimestamp,
-        query: query.toString(),
-        slackChannelId: query.get('channel_id'),
-        teamId: query.get('team_id'),
-        slackMessage,
-    });
+    // DB.insert({
+    //     id,
+    //     timestamp: messageTimestamp,
+    //     query: query.toString(),
+    //     slackChannelId: query.get('channel_id'),
+    //     teamId: query.get('team_id'),
+    //     slackMessage,
+    // });
     
     callback(null, {
         statusCode: 200,
