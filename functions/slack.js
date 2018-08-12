@@ -3,7 +3,7 @@
 
 // const TinyDB = require('tinydb');
 const hash = require('../src/utils/hash');
-// const { getDB } = require('./utils/DB');
+const { getDB } = require('./utils/DB');
 
 const clientFeatureWarning = "(upgrade your Slack client for better UX)";
 

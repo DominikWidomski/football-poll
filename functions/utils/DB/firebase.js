@@ -6,6 +6,9 @@ const firebase = require("firebase");
 require("firebase/firestore");
 const serviceAccountJSON = require('../../../doms-slack-786b1bf42868.json');
 
+console.log("FIREBASE: start import");
+console.log("FIREBASE: account", serviceAccountJSON);
+
 const collectionId = 'slack/poll/messages/';
 
 class FirestoreConnection {
