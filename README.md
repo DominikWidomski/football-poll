@@ -33,6 +33,10 @@ Might then need to update the URL in slack's config.
   - [ ] In production, will I have to plug into firebase or something?!
   - [ ] Probably would be better to just build with firebase, TinyDB is not even done, there are some other alternatives tho, but could add those later for convenicence.
   - [ ] Seems like the production thing is stuck, times out, not sure why exactly, if it's the DB thing is wrong but then the funciton remains stuck? or it's just an issue with how it was developed and was setup with the DB, so once I have removed the dependancy on tinyDB and switched to Firebase I will work as expected.
+  - [ ] Works in local dev, once deployed even just requireing the firebase.js file causes slack call to time out.
+    - [ ] Gonna check from postman, rather than Slack... other than the firebase thing it works fine.
+    - [ ] I'm starting to think, if it will appear to be actual timeout based on the database interaction, might need to use the API and not based on the response. Perhaps if it is then somehow netlify fails and doesn't log anything... :\ that would be _terrible_
+    - [ ] Still pending breaking down further. It's like it hangs because I get no logs AT ALL!
 
 ### Show'n'Tell Notes:
 
@@ -92,6 +96,7 @@ General objective:
   - Otherwise I might be doing something wrong, maybe async problems, and would be good to simplify the case to debug.
 - So, I did Slack message updating with slack by responding with an updated message.
   - So this is one way of doing it. And I'm not sure if it would be easy enough to translate this to using the Slack web API. What would be the need to do that, is something not possible with the current approach?
+- Don't like how the error in the netlify logs doesn't show the actual callback error... it's a bit confusing and can't see everything in one place.
 
 ### Notes:
 

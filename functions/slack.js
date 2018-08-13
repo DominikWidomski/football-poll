@@ -1,9 +1,14 @@
 // this is kind useful maybe...
 // https://medium.com/slack-developer-blog/out-and-back-again-6b2f3c84f484
 
+console.log('[SLACK:] start');
+
 // const TinyDB = require('tinydb');
 const hash = require('../src/utils/hash');
-const { getDB } = require('./utils/DB');
+const firebase = require('./utils/DB/firebase');
+// const getDB = firebase.getDB;
+
+console.log('[SLACK:] after imports');
 
 const clientFeatureWarning = "(upgrade your Slack client for better UX)";
 
@@ -29,6 +34,8 @@ const AUTH_TOKEN = "WPxNoxrvZYvE5T0B8xSFApNR"; // FIXME put in process ENV
 
 const { URLSearchParams } = require('url');
 const constructPoll = require('../src/constructPoll');
+
+console.log('[SLACK:] before handler');
 
 exports.handler = async function handler(event, context, callback) {
     console.log(">>> Inside Lambda", `[NODE_ENV: ${process.env.NODE_ENV}]`);

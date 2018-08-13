@@ -1,3 +1,5 @@
+// perhaps: https://github.com/typicode/lowdb
+
 const TinyDB = require('tinydb');
 
 const dbReady = async (DB) => new Promise(resolve => DB.onReady = resolve);
