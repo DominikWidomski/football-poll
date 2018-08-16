@@ -2,9 +2,9 @@
 console.log('[FIREBASE:] First line in file');
 
 const admin = require('firebase-admin');
-const firebase = require("firebase");
+// const firebase = require("firebase");  // TIMESOUT
 // Required for side-effects
-require("firebase/firestore");
+// require("firebase/firestore");  // TIMESOUT
 // const serviceAccountJSON = require('../../../doms-slack-786b1bf42868.json');
 const serviceAccountJSON = { // TODO: revert this shit
     "type": "service_account",

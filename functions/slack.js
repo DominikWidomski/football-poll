@@ -6,7 +6,7 @@ console.log('[SLACK:] start');
 // const TinyDB = require('tinydb');
 const hash = require('../src/utils/hash');
 const firebase = require('./utils/DB/firebase');
-// const getDB = firebase.getDB;
+const getDB = firebase.getDB;
 
 console.log('[SLACK:] after imports');
 
@@ -51,14 +51,14 @@ exports.handler = async function handler(event, context, callback) {
         return;
     }
     
-    // let DB;
-    // try {
-    //     DB = await getDB('./local.db');
-    //     console.log("GOT THE DATABASE"); // DEBUG
-    // } catch (e) {
-    //     console.log("SOME ERROR?!"); // DEBUG
-    //     callback(e);
-    // }
+    let DB;
+    try {
+        DB = await getDB('./local.db');
+        console.log("GOT THE DATABASE"); // DEBUG
+    } catch (e) {
+        console.log("SOME ERROR?!"); // DEBUG
+        callback(e);
+    }
     /* RETRIEVING DB
     let DB;
     try {
@@ -186,16 +186,18 @@ exports.handler = async function handler(event, context, callback) {
         teamId: query.get('team_id'),
         slackMessage,
     });
-    //*/
+    /*/
     // FIXME: UGH! adapter.setup should return instance of abstracted DBInterface
-    // DB.insert({
-    //     id,
-    //     timestamp: messageTimestamp,
-    //     query: query.toString(),
-    //     slackChannelId: query.get('channel_id'),
-    //     teamId: query.get('team_id'),
-    //     slackMessage,
-    // });
+    if (DB) {
+        DB.insert({
+            id,
+            timestamp: messageTimestamp,
+            query: query.toString(),
+            slackChannelId: query.get('channel_id'),
+            teamId: query.get('team_id'),
+            slackMessage,
+        });
+    }
     
     callback(null, {
         statusCode: 200,

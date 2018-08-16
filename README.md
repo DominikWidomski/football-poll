@@ -87,6 +87,7 @@ General objective:
 	- Netlify has "split testing" with branch deploys, worth exploring
 - You like Jake Archibald, recent tweet: https://twitter.com/jaffathecake/status/1008705035532947461
 - Add Flow
+- Add prettier and eslint
 
 ### Issues:
 
