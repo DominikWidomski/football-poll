@@ -1,7 +1,8 @@
 // RELEVANT: https://firebase.google.com/docs/firestore/quickstart
 console.log('[FIREBASE:] First line in file');
 
-const admin = require('firebase-admin');
+const Firestore = require('@google-cloud/firestore');
+// const admin = require('firebase-admin');
 // const firebase = require("firebase");  // TIMESOUT
 // Required for side-effects
 // require("firebase/firestore");  // TIMESOUT
@@ -92,7 +93,7 @@ class FirestoreConnection {
         const docRef = this._db.collection(collectionId).doc(data.id);
 
         // write data to that document
-        const docWriteResult = docRef.set(data);
+        const docWriteResult = await docRef.set(data);
 
         console.log("Firebase write:", docWriteResult);
 
@@ -128,7 +129,9 @@ class FirestoreRecord {
 }
 
 const getDB = async (dbLocation) => {
-    console.log("[FIREBASE:] getDB - START");
+    console.log("[FIRESTORE:] getDB - START");
+
+    /*
     if (admin.apps.length) {
         console.log("[FIREBASE:] HAS APP!");
         return new FirestoreConnection(admin.firestore());
@@ -139,12 +142,26 @@ const getDB = async (dbLocation) => {
         credential: admin.credential.cert(serviceAccountJSON),
         databaseURL: 'https://doms-slack.firebaseio.com/'
     });
+    //*/
 
-    console.log("[FIREBASE:] get firestore");
-    const firestoreDB = admin.firestore();
-    console.log("[FIREBASE:] settings");
+    // console.log('Firestore:', firestore);
+
+    // if (firestore.apps.length) {
+    //     console.log("[FIREBASE:] HAS APP!");
+    //     return new FirestoreConnection(firestore.database());
+    // }
+
+    // console.log("[FIREBASE:] initializeApp");
+    console.log("[FIRESTORE:] get firestore");
+    const firestoreDB = new Firestore({
+        projectId: "doms-slack",
+        keyFilename: 'doms-slack-786b1bf42868.json'
+    });
+
+    // const firestoreDB = admin.firestore();
+    console.log("[FIRESTORE:] settings");
     firestoreDB.settings({ timestampsInSnapshots: true });
-    console.log("[FIREBASE:] return new FirestoreConnection");
+    console.log("[FIRESTORE:] return new FirestoreConnection");
     return new FirestoreConnection(firestoreDB);
 };
 
