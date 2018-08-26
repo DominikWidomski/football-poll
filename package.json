@@ -13,7 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@firebase/app-types": "^0.3.2",
     "@google-cloud/firestore": "^0.16.1",
     "btoa": "^1.2.1",
     "chalk": "^2.4.1",
