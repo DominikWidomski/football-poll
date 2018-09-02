@@ -38,7 +38,7 @@ const constructPoll = require('../src/constructPoll');
 console.log('[SLACK:] before handler');
 
 exports.handler = async function handler(event, context, callback) {
-    console.log(">>> Inside Lambda", `[NODE_ENV: ${process.env.NODE_ENV}]`);
+    console.log(">>> Inside Lambda", `[NODE_ENV: ${process.env.NODE_ENV}]`, `path: ${__dirname} - ${__filename}`);
 
     const query = new URLSearchParams(event.body);
 

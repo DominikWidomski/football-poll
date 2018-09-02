@@ -24,6 +24,15 @@ Might then need to update the URL in slack's config.
 ## Problems:
 - Build:
   - [x] I either excludeExternals and it builds, or fetch is still not available becuase of BS inside of `iconv-loader`
+  - [ ] later run into issues with gRPC or Firebase protos or something. It only works if I don't bundle it, probably because of a wrong environment or something?
+  - https://github.com/serverless-heaven/serverless-webpack/issues/342
+  - https://jlongster.com/Backend-Apps-with-Webpack--Part-I
+  - https://github.com/gatsbyjs/gatsby/issues/3686
+  - https://github.com/firebase/firebase-js-sdk/issues/221
+  - https://github.com/mapbox/node-pre-gyp/issues/308
+  - https://github.com/grpc/grpc-web/issues/98
+  - https://github.com/liady/webpack-node-externals
+  - https://github.com/gatsbyjs/gatsby/issues/3686
 - Environment:
   - [ ] Would like to setup NODE_ENV correctly or maybe have some additional variable to specify not production branch or dev or whatever, `local` vs `hosted`
     - `master` can have proper production config
