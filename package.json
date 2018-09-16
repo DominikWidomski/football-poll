@@ -8,10 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lambda-dev": "AWS_LAMBDA_JS_RUNTIME=nodejs8.10 netlify-lambda serve ./functions -c ./webpack.config.js",
     "lambda-build": "AWS_LAMBDA_JS_RUNTIME=nodejs8.10 netlify-lambda build ./functions -c ./webpack-prod.config.js",
-    "build": "npm run lambda-build && npm run prepare",
-
+    "build": "npm run lambda-build",
     "###############": "temp comment, from here: https://github.com/serverless-heaven/serverless-webpack/issues/342#issuecomment-383248835",
-    "prepare": "npm rebuild grpc --target=8.1.0 --target_arch=x64 --target_platform=linux --target_libc=glibc"
+    "###prepare": "npm rebuild grpc --target=8.1.0 --target_arch=x64 --target_platform=linux --target_libc=glibc"
   },
   "author": "",
   "license": "ISC",
