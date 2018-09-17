@@ -33,6 +33,16 @@ Might then need to update the URL in slack's config.
   - https://github.com/grpc/grpc-web/issues/98
   - https://github.com/liady/webpack-node-externals
   - https://github.com/gatsbyjs/gatsby/issues/3686
+  - [ ] it was at this point that I learned about zeit serverless and started to consider it https://zeit.co/blog/serverless-docker
+    - because I believe there's an issue with netlify doing a bunch of custom shit when building functions, they move files around etc, and the firestore also stupidly looks at some assumed things. which is dumb, I think the whole thing should just work once you bundle it WTF!?!??!
+    - Quickly realised (I guess correctly) that zeit is just server, nothing specifically to do with serverless functions, so the routing to them is not handled of course. Back to figuring out the data persistance problem, sticking with Netlify for functions hosting
+  - [ ] Switched firestore for MongoDB eventually, using Atlas MongoDB cloud Database as a Service
+    - The config for how to connect to it wasn't exactly obvious or super simple. The errors were generic or not very useful and the documentation could have done better in telling me how exactly to connect to my replica set
+      - had to go through some online question threads and several pages of documentation to figure out bits and pieces
+      - really appreciating documentation of things like React, they've really put a lot of effort into it which helps with adoption of course
+      - this is super important, we shouldn't have to be spending hours on just "hello world" connection to a service like that. The whole point is to make it as productive as soon as possible, for lazy developers like myself :)
+    - Now that I have a MongoDB working locally, I have a feeling like Netlify functions deployment is broken altogether? Not sure what I could have broken to break it completely. Like WTF!!!
+      - Nope. False alarm. Seems I had wrong leftover config :sweat_smile:
 - Environment:
   - [ ] Would like to setup NODE_ENV correctly or maybe have some additional variable to specify not production branch or dev or whatever, `local` vs `hosted`
     - `master` can have proper production config

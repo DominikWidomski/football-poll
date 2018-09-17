@@ -5,8 +5,10 @@ console.log('[SLACK:] start');
 
 // const TinyDB = require('tinydb');
 const hash = require('../src/utils/hash');
-const firebase = require('./utils/DB/firebase');
-const getDB = firebase.getDB;
+// const firebase = require('./utils/DB/firebase');
+// const getDB = firebase.getDB;
+const mongodb = require('./utils/DB/mongodb');
+const getDB = mongodb.getDB;
 
 console.log('[SLACK:] after imports');
 
@@ -56,7 +58,7 @@ exports.handler = async function handler(event, context, callback) {
         DB = await getDB('./local.db');
         console.log("GOT THE DATABASE"); // DEBUG
     } catch (e) {
-        console.log("SOME ERROR?!"); // DEBUG
+        console.log("Error getting DB"); // DEBUG
         callback(e);
     }
     /* RETRIEVING DB
