@@ -200,6 +200,8 @@ exports.handler = async function handler(event, context, callback) {
             slackMessage,
         });
     }
+
+    process.emit('cleanup');
     
     callback(null, {
         statusCode: 200,

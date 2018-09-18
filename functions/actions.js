@@ -1,9 +1,12 @@
 const AUTH_TOKEN = "WPxNoxrvZYvE5T0B8xSFApNR"; // FIXME put in process ENV
 
 const chalk = require('chalk');
-const TinyDB = require('tinydb');
-const DB = new TinyDB('./local.db'); // pass that from lambda context or something
-const { getDB } = require("./utils/DB");
+const { URLSearchParams } = require('url');
+// const TinyDB = require('tinydb');
+// const DB = new TinyDB('./local.db'); // pass that from lambda context or something
+// const { getDB } = require("./utils/DB");
+const mongodb = require('./utils/DB/mongodb');
+const { getDB } = mongodb;
 
 // const dbReady = async (DB) => new Promise(resolve => DB.onReady = resolve);
 
@@ -47,6 +50,21 @@ const actionHandlers = {
 // https://www.netlify.com/docs/netlify-toml-reference/ Context for setting up and passing DB???
 // https://www.netlify.com/docs/continuous-deployment/
 exports.handler = async function handler(event, context, callback) {
+    console.log(">>> Inside Lambda", `[NODE_ENV: ${process.env.NODE_ENV}]`, `path: ${__dirname} - ${__filename}`);
+
+    const body = new URLSearchParams(event.body);
+    
+    console.log("[BODY]:", body);
+
+    const payload = JSON.parse(body.get('payload'));
+
+    if (payload.token !== AUTH_TOKEN) {
+        console.log("TOKEN", payload.token);
+        console.log("PAYLOAD", payload);
+        callback(new Error('Unauthorized'));
+        return;
+    }
+
     // RETRIEVING DB
     // try {
     //     await dbReady(DB);
@@ -55,21 +73,15 @@ exports.handler = async function handler(event, context, callback) {
     // }
     let DB;
     try {
-        DB = await getDB('./local.db')
+        DB = await getDB('./local.db');
+        console.log("GOT THE DATABASE"); // DEBUG
     } catch (e) {
+        console.log("Error getting DB"); // DEBUG
         callback(e);
-    }
-    
-    const body = new URLSearchParams(event.body);
-    
-    console.log(body);
-
-    const payload = JSON.parse(body.get('payload'));
-
-    if (payload.token !== AUTH_TOKEN) {
-        callback(new Error('Unauthorized'));
         return;
     }
+
+    console.log('RETRIEVED DATABASE CONNECTIOn');
 
     // console.log("MESSAGE TS:", payload.message_ts.split('.')[0], "??? 1529653179");
     const payloadId = payload.actions[0].value.split('@')[0];
@@ -101,6 +113,7 @@ exports.handler = async function handler(event, context, callback) {
         // });
 
         try {
+            console.log("[ACTIONS]: TRYING TO FIND RECORD");
             const res = await DB.find(query);
             resolve(res);
         } catch (e) {
@@ -108,13 +121,17 @@ exports.handler = async function handler(event, context, callback) {
         }
     });
 
-    const savedMessageData = savedMessageRecord.data;
-    
-    console.log("SAVED MESSAGE DATA", savedMessageData);
+    let savedMessageData;
+    if (savedMessageRecord && savedMessageRecord.data) {
+        savedMessageData = savedMessageRecord.data;    
+        console.log("[ACTIONS]: SAVED MESSAGE DATA", savedMessageData);
+    } else {
+        console.log("[ACTIONS]: SAVED MESSAGE NOT FOUND");
+    }
 
     let responseMessage = '';
 
-    if (payload.type === "interactive_message") {
+    if (savedMessageData && payload.type === "interactive_message") {
         const { actions, team, user } = payload;
         const { callback_id } = payload;
 
@@ -146,15 +163,18 @@ exports.handler = async function handler(event, context, callback) {
     }
     
     // Update slack message
-    const { fields } = savedMessageData.slackMessage.attachments[1];
-    savedMessageData.slackMessage.attachments[1].fields = fields.map(field => {
-        const day = field.title.split(' ')[0]; // Icon, e.g.: ":one:"
+    if (savedMessageData) {
 
-        return {
-            ...field,
-            value: `players: ${(savedMessageData.players[day] || []).join(' ')}`
-        };
-    });
+        const { fields } = savedMessageData.slackMessage.attachments[1];
+        savedMessageData.slackMessage.attachments[1].fields = fields.map(field => {
+            const day = field.title.split(' ')[0]; // Icon, e.g.: ":one:"
+            
+            return {
+                ...field,
+                value: `players: ${(savedMessageData.players[day] || []).join(' ')}`
+            };
+        });
+    }
 
     // INSERTING to / UPDATING DB
     // TODO: This is bullshit TinyDB is not finished
@@ -163,7 +183,7 @@ exports.handler = async function handler(event, context, callback) {
     // DB._data.data[DB_RECORD_INDEX] = savedMessage;
     // DB._save();
 
-    savedMessageData.update(savedMessageData);
+    // savedMessageData.update(savedMessageData);
     
     // DB.insertItem(savedMessage, savedMessage._id, (error, content) => {
     //     if (error) {
@@ -174,6 +194,8 @@ exports.handler = async function handler(event, context, callback) {
     //     }
     // });
 
+    process.emit('cleanup');
+
     callback(null, {
         statusCode: 200,
         headers: {
@@ -182,7 +204,7 @@ exports.handler = async function handler(event, context, callback) {
         // body: JSON.stringify({
         //     "response_type": "ephemeral", // FIXME: Expecting a message only to the user but is replacing the original message...
         //     "text": '',
-        body: JSON.stringify(savedMessageData.slackMessage)
+        body: JSON.stringify(savedMessageData ? savedMessageData.slackMessage : "NO MESSAGE FOUND")
         // })
         // body: ''
     });

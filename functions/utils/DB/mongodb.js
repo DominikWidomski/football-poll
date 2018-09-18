@@ -6,6 +6,7 @@ const os = require('os');
 
 function noOp() { };
 
+// TODO: setup proper event emitter to remove the listener as the process might still be running in memory
 function cleanup(callback) {
 
     // attach user callback to the process event emitter
@@ -148,28 +149,29 @@ const getDB = async (dbLocation) => {
                 return;
             }
             // perform actions on the collection object
-            const collection = client.db(config.db).collection(config.collection);
+            // const collection = client.db(config.db).collection(config.collection);
 
-            const results = await new Promise((resolve, reject) => {
-                const location = os && os.hostname ? os.hostname() : "unknown";
+            // const results = await new Promise((resolve, reject) => {
+            //     const location = os && os.hostname ? os.hostname() : "unknown";
 
-                collection.insertMany([
-                    { a: 1, location }, { a: 2, location }
-                ], (error, result) => {
-                    if (error) {
-                        reject(new Error(error));
-                        return;
-                    }
+            //     collection.insertMany([
+            //         { a: 1, location }, { a: 2, location }
+            //     ], (error, result) => {
+            //         if (error) {
+            //             reject(new Error(error));
+            //             return;
+            //         }
 
-                    resolve(result.ops);
-                });
-            });
+            //         resolve(result.ops);
+            //     });
+            // });
 
-            console.log('[MONGODB]: inserted:', JSON.stringify(results, null, 2, 2));
+            // console.log('[MONGODB]: inserted:', JSON.stringify(results, null, 2, 2));
             
             // console.log("[MONGODB]: ", collection);
             
             // console.log("[MONGODB]: CLIENT", client);
+            console.log("[MONGODB]: got client");
 
             cleanup(() => {
                 client.close();
