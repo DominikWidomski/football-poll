@@ -84,14 +84,18 @@ exports.handler = async function handler(event, context, callback) {
     console.log('RETRIEVED DATABASE CONNECTIOn');
 
     // console.log("MESSAGE TS:", payload.message_ts.split('.')[0], "??? 1529653179");
+    // TODO: place this in a better place in the message data or something
+    // one place, not accessing a bloody array value lol totally sketchy
     const payloadId = payload.actions[0].value.split('@')[0];
-    console.log('ID', payloadId);
+    const slackChannelId = payload.channel.id;
 
     const query = {
         id: payloadId,
         // timestamp: payload.message_ts.split('.')[0],
-        slackChannelId: payload.channel.id
+        slackChannelId
     };
+
+    console.log('[ACTIONS]: QUERY', query);
 
     const savedMessageRecord = await new Promise(async (resolve, reject) => {
         // RETRIEVING FROM DB
@@ -196,6 +200,9 @@ exports.handler = async function handler(event, context, callback) {
 
     process.emit('cleanup');
 
+    // returning empty message does not modify the original message
+    const returnBody = savedMessageData ? savedMessageData.slackMessage : process.env.NODE_ENV === "development" ? "NO MESSAGE FOUND" : '';
+
     callback(null, {
         statusCode: 200,
         headers: {
@@ -204,7 +211,7 @@ exports.handler = async function handler(event, context, callback) {
         // body: JSON.stringify({
         //     "response_type": "ephemeral", // FIXME: Expecting a message only to the user but is replacing the original message...
         //     "text": '',
-        body: JSON.stringify(savedMessageData ? savedMessageData.slackMessage : "NO MESSAGE FOUND")
+        body: returnBody
         // })
         // body: ''
     });

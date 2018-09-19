@@ -72,14 +72,32 @@ class MongoDBConnection {
 
     async find(query) {
         // TODO: query likely needs to be transformed into MongoDB specific fields etc
-        // const collection = this._client.db(config.db).collection(config.collection);
+        // After a second thought... not really. There's a specific `id` field in the saved message
+        // need to rename that to something specific like `integrationMessageId`, but can use that
+        const collection = this._client.db(config.db).collection(config.collection);
         
-        // collection.find(query).toArray(function (err, docs) {
-        //     assert.equal(err, null);
-        //     console.log("Found the following records");
-        //     console.log(docs)
-        //     callback(docs);
-        // });
+        const result = await new Promise((resolve, reject) => {
+
+            collection.find(query).toArray(function (error, docs) {
+                if (error) {
+                    reject(new Error(error));
+                    return;
+                }
+
+                resolve(docs);
+                return;
+                
+                // assert.equal(err, null);
+                // console.log("Found the following records");
+                // console.log(docs)
+                // callback(docs);
+                
+            });
+
+            // reject(new Error('Something wrong with querying DB'));
+        });
+
+        return result;
     }
 
     async insert(data) {

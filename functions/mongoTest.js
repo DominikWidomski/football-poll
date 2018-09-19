@@ -7,11 +7,22 @@ async function main() {
         DB = await getDB('./local.db');
         console.log("GOT THE DATABASE"); // DEBUG
         // console.log(DB);
-        process.exit();
     } catch (e) {
         console.log("Error getting DB", e); // DEBUG
         // callback(e);
     }
+
+    const query = {
+        id: "LTE3NDM3MTAwMTA=",
+        // timestamp: payload.message_ts.split('.')[0],
+        slackChannelId: "D060PKVNK"
+    };
+
+    const res = await DB.find(query);
+
+    console.log(res);
+    
+    process.exit();
 }
 
 main();
