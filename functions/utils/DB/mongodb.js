@@ -6,13 +6,20 @@ const os = require('os');
 
 function noOp() { };
 
+const callbacks = new Map();
+let callbackId = 0;
 // TODO: setup proper event emitter to remove the listener as the process might still be running in memory
 function cleanup(callback) {
-
     // attach user callback to the process event emitter
     // if no callback, it will still exit gracefully on Ctrl-C
     callback = callback || noOp;
-    process.on('cleanup', callback);
+    callbacks.set(callbackId, callback);
+    callbackId++;
+    
+    process.on('cleanup', () => {
+        callbacks.forEach(callback => callback())
+        callbacks.clear();
+    });
 
     // do app specific cleaning before exiting
     process.on('exit', function () {

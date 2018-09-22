@@ -44,6 +44,7 @@ Might then need to update the URL in slack's config.
     - Now that I have a MongoDB working locally, I have a feeling like Netlify functions deployment is broken altogether? Not sure what I could have broken to break it completely. Like WTF!!!
       - Nope. False alarm. Seems I had wrong leftover config :sweat_smile:
     - OK. Doesn't just fail. Saves to remote MongoDB but slack connection times out. Also Netlify task times out (possibly client doesn't close and process doesn't exit in time). Maybe if I just close the client right away it could work. Perhaps it's worth starting considering using the Slack API rather than just the response.
+    - Seems that it's working but having issues with things in memory? Need to cleanup the monboDB client connection etc, not sure if it restarts fully new or whatever and has issues with connecting to it. Can't process.exit before response...
 - Environment:
   - [ ] Would like to setup NODE_ENV correctly or maybe have some additional variable to specify not production branch or dev or whatever, `local` vs `hosted`
     - `master` can have proper production config
