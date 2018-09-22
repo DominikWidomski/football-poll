@@ -20,7 +20,7 @@ async function main() {
 
     const res = await DB.find(query);
 
-    console.log("FOUND:", res);
+    console.log("Records:", res);
     
     process.exit();
 }

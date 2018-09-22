@@ -97,7 +97,7 @@ exports.handler = async function handler(event, context, callback) {
 
     console.log('[ACTIONS]: QUERY', query);
 
-    const savedMessageRecord = await new Promise(async (resolve, reject) => {
+    const savedMessageRecords = await new Promise(async (resolve, reject) => {
         // RETRIEVING FROM DB
         // DB.find({
         //     id: payloadId,
@@ -119,6 +119,7 @@ exports.handler = async function handler(event, context, callback) {
         try {
             console.log("[ACTIONS]: TRYING TO FIND RECORD");
             const res = await DB.find(query);
+            console.log("[ACTIONS]: result:", res);
             resolve(res);
         } catch (e) {
             callback(new Error("Error retrieving record", e));
@@ -126,8 +127,9 @@ exports.handler = async function handler(event, context, callback) {
     });
 
     let savedMessageData;
-    if (savedMessageRecord && savedMessageRecord.data) {
-        savedMessageData = savedMessageRecord.data;    
+    // TODO: What do when found many?
+    if (savedMessageRecords && savedMessageRecords.length) {
+        savedMessageData = savedMessageRecords[0].data;
         console.log("[ACTIONS]: SAVED MESSAGE DATA", savedMessageData);
     } else {
         console.log("[ACTIONS]: SAVED MESSAGE NOT FOUND");

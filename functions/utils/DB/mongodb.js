@@ -98,7 +98,11 @@ class MongoDBConnection {
             // reject(new Error('Something wrong with querying DB'));
         });
 
-        return result;
+        if (result.length) {
+            return result.map(record => new MongoDBRecord(this._client, record));
+        }
+        
+        return [];
     }
 
     async insert(data) {
