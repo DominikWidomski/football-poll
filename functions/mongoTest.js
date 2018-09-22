@@ -13,14 +13,14 @@ async function main() {
     }
 
     const query = {
-        id: "LTE3NDM3MTAwMTA=",
+        id: "MTE0NjI0MzYyNQ==",
         // timestamp: payload.message_ts.split('.')[0],
         slackChannelId: "D060PKVNK"
     };
 
     const res = await DB.find(query);
 
-    console.log(res);
+    console.log("FOUND:", res);
     
     process.exit();
 }

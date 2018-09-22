@@ -201,6 +201,7 @@ exports.handler = async function handler(event, context, callback) {
     process.emit('cleanup');
 
     // returning empty message does not modify the original message
+    // TODO: confirm this with docs and test
     const returnBody = savedMessageData ? savedMessageData.slackMessage : process.env.NODE_ENV === "development" ? "NO MESSAGE FOUND" : '';
 
     callback(null, {

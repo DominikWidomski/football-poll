@@ -84,6 +84,7 @@ class MongoDBConnection {
                     return;
                 }
 
+                console.log("THIS IS THE RESULT", error, docs);
                 resolve(docs);
                 return;
                 
