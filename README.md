@@ -45,6 +45,14 @@ Might then need to update the URL in slack's config.
       - Nope. False alarm. Seems I had wrong leftover config :sweat_smile:
     - OK. Doesn't just fail. Saves to remote MongoDB but slack connection times out. Also Netlify task times out (possibly client doesn't close and process doesn't exit in time). Maybe if I just close the client right away it could work. Perhaps it's worth starting considering using the Slack API rather than just the response.
     - Seems that it's working but having issues with things in memory? Need to cleanup the monboDB client connection etc, not sure if it restarts fully new or whatever and has issues with connecting to it. Can't process.exit before response...
+    - Last thing was the fact that I returned an object instead of a buffer (JSON.stringify(returnBody)), which Netlify didn't tell me because I did it in the callback, which I could have TRIED and then catch that error maybe? I had to run it locally and NGROK to it, then I could see it in the console, because it was a general error and they only come up if I `callback(error)` them... 
+      - error was:
+        Error during invocation:  TypeError [ERR_INVALID_ARG_TYPE]: The first argument must be one of type string or Buffer. Received type object
+          at write_ (_http_outgoing.js:603:11)
+          at ServerResponse.write (_http_outgoing.js:575:10)
+          at callback (/Users/dddom/Dev/private/sandbox/slack_football_poll/node_modules/netlify-lambda/lib/serve.js:26:14)
+          at Object.handler (/Users/dddom/Dev/private/sandbox/slack_football_poll/dist/functions/actions.js:43082:5)
+          at process._tickCallback (internal/process/next_tick.js:68:7)
 - Environment:
   - [ ] Would like to setup NODE_ENV correctly or maybe have some additional variable to specify not production branch or dev or whatever, `local` vs `hosted`
     - `master` can have proper production config

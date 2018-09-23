@@ -81,7 +81,7 @@ exports.handler = async function handler(event, context, callback) {
         return;
     }
 
-    console.log('RETRIEVED DATABASE CONNECTIOn');
+    console.log('RETRIEVED DATABASE CONNECTION');
 
     // console.log("MESSAGE TS:", payload.message_ts.split('.')[0], "??? 1529653179");
     // TODO: place this in a better place in the message data or something
@@ -214,7 +214,7 @@ exports.handler = async function handler(event, context, callback) {
         // body: JSON.stringify({
         //     "response_type": "ephemeral", // FIXME: Expecting a message only to the user but is replacing the original message...
         //     "text": '',
-        body: returnBody
+        body: JSON.stringify(returnBody)
         // })
         // body: ''
     });
