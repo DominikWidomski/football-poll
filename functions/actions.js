@@ -189,7 +189,7 @@ exports.handler = async function handler(event, context, callback) {
     // DB._data.data[DB_RECORD_INDEX] = savedMessage;
     // DB._save();
 
-    // savedMessageData.update(savedMessageData);
+    savedMessageRecords[0].set(savedMessageData);
     
     // DB.insertItem(savedMessage, savedMessage._id, (error, content) => {
     //     if (error) {

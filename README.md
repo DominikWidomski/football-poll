@@ -53,6 +53,7 @@ Might then need to update the URL in slack's config.
           at callback (/Users/dddom/Dev/private/sandbox/slack_football_poll/node_modules/netlify-lambda/lib/serve.js:26:14)
           at Object.handler (/Users/dddom/Dev/private/sandbox/slack_football_poll/dist/functions/actions.js:43082:5)
           at process._tickCallback (internal/process/next_tick.js:68:7)
+    - Not sure, even with the try/catch didn't work until I basically just fixed the last bit of it... :\
 - Environment:
   - [ ] Would like to setup NODE_ENV correctly or maybe have some additional variable to specify not production branch or dev or whatever, `local` vs `hosted`
     - `master` can have proper production config

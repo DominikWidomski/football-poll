@@ -145,11 +145,20 @@ class MongoDBRecord {
     async set(newData) {
         const collection = this._client.db(config.db).collection(config.collection);
 
-        collection.updateOne({ _id: this._dat._id}, {$set: newData}, (error, result) => {
-            if (error) {
-                throw new Error(error);
-            }
-        });
+        console.log("[MONGODB]: set", { _id: this._data._id });
+
+        return new Promise((resolve, reject) => {
+            collection.updateOne({ _id: this._data._id}, {$set: newData}, (error, result) => {
+                if (error) {
+                    reject(new Error(error));
+                    return;
+                }
+                
+                console.log("[MONGODB]: set successful", result.result);
+                
+                resolve(result);
+            });
+        })
     }
 
     async delete() {
