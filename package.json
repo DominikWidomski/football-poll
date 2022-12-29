@@ -16,6 +16,6 @@
     "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {
-    "netlify-lambda": "^0.4.0"
+    "netlify-lambda": "^2.0.15"
   }
 }
